@@ -1,0 +1,28 @@
+services:
+  tfs:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    image: tfs:production
+    container_name: tfs-server
+    restart: unless-stopped
+    ports:
+      - "7171:7171"
+      - "7172:7172"
+    volumes:
+      - ./data:/srv/data
+      - ./config.lua:/srv/config.lua:ro
+      - ./key.pem:/srv/key.pem:ro
+    environment:
+      - TZ=UTC
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "7171"]
+      interval: 30s
+      timeout: 3s
+      start_period: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

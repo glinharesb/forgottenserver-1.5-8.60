@@ -1,0 +1,24 @@
+services:
+  tfs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tfs:debug
+    container_name: tfs-server-debug
+    restart: on-failure:3
+    ports:
+      - "7171:7171"
+      - "7172:7172"
+    volumes:
+      - ./data:/srv/data
+      - ./config.lua:/srv/config.lua:ro
+      - ./key.pem:/srv/key.pem:ro
+      - ./debug.sh:/srv/debug.sh:ro
+    stdin_open: true
+    tty: true
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      - TZ=UTC
