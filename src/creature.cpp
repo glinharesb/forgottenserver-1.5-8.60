@@ -124,7 +124,7 @@ int32_t Creature::getWalkDelay() const
 	}
 
 	int64_t ct = OTSYS_TIME();
-	int64_t stepDuration = getStepDuration() * lastStepCost;
+	int64_t stepDuration = getStepDuration();
 	return stepDuration - (ct - lastStep);
 }
 
@@ -313,7 +313,7 @@ void Creature::addEventWalk(bool firstStep)
 		g_game.checkCreatureWalk(getID());
 	}
 
-	eventWalk = g_scheduler.addEvent(createSchedulerTask(ticks, std::bind(&Game::checkCreatureWalk, &g_game, getID())));
+	eventWalk = g_scheduler.addEvent(createSchedulerTask(std::max<int64_t>(SCHEDULER_MINTICKS, ticks), std::bind(&Game::checkCreatureWalk, &g_game, getID())));
 }
 
 void Creature::stopEventWalk()
@@ -1395,7 +1395,7 @@ int64_t Creature::getStepDuration(Direction dir) const
 {
 	int64_t stepDuration = getStepDuration();
 	if ((dir & DIRECTION_DIAGONAL_MASK) != 0) {
-		stepDuration *= 3;
+		stepDuration *= 2;
 	}
 	return stepDuration;
 }
@@ -1406,9 +1406,13 @@ int64_t Creature::getStepDuration() const
 		return 0;
 	}
 
-	uint32_t groundSpeed;
 	int32_t stepSpeed = getStepSpeed();
+	if (stepSpeed == 0) {
+		return 0;
+	}
+
 	Item* ground = tile->getGround();
+	uint32_t groundSpeed;
 	if (ground) {
 		groundSpeed = Item::items[ground->getID()].speed;
 		if (groundSpeed == 0) {
@@ -1418,29 +1422,28 @@ int64_t Creature::getStepDuration() const
 		groundSpeed = 150;
 	}
 
-	double duration = std::floor(1000 * groundSpeed) / stepSpeed;
-	int64_t stepDuration = std::ceil(duration / 50) * 50;
+	int64_t stepDuration = (1000 * groundSpeed) / stepSpeed;
 
 	const Monster* monster = getMonster();
 	if (monster && monster->isTargetNearby() && !monster->isFleeing() && !monster->getMaster()) {
 		stepDuration *= 3;
 	}
 
-	return stepDuration;
+	return stepDuration * lastStepCost;
 }
 
 int64_t Creature::getEventStepTicks(bool onlyDelay) const
 {
 	int64_t ret = getWalkDelay();
-	if (ret <= 0) {
-		int64_t stepDuration = getStepDuration();
-		if (onlyDelay && stepDuration > 0) {
-			ret = 1;
-		} else {
-			ret = stepDuration * lastStepCost;
-		}
+	if (ret > 0) {
+		return ret;
 	}
-	return ret;
+
+	if (!onlyDelay) {
+		return getStepDuration();
+	}
+
+	return 1;
 }
 
 LightInfo Creature::getCreatureLight() const
