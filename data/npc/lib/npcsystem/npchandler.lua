@@ -36,7 +36,7 @@ if NpcHandler == nil then
 
 	-- Constant indexes for callback functions. These are also used for module callback ids.
 	CALLBACK_CREATURE_APPEAR = 1
-	CALLBACK_CREATURE_DISAPPEAR	= 2
+	CALLBACK_CREATURE_DISAPPEAR = 2
 	CALLBACK_CREATURE_SAY = 3
 	CALLBACK_ONTHINK = 4
 	CALLBACK_GREET = 5
@@ -98,8 +98,8 @@ if NpcHandler == nil then
 			[MESSAGE_ONCLOSESHOP] = "Thank you, come back whenever you're in need of something else.",
 			[MESSAGE_ALREADYFOCUSED] = "|PLAYERNAME|, I am already talking to you.",
 			[MESSAGE_WALKAWAY_MALE] = "Good bye.",
-			[MESSAGE_WALKAWAY_FEMALE] = "Good bye."
-		}
+			[MESSAGE_WALKAWAY_FEMALE] = "Good bye.",
+		},
 	}
 
 	-- Creates a new NpcHandler with an empty callbackFunction stack.
@@ -152,7 +152,7 @@ if NpcHandler == nil then
 
 	-- Function used to verify if npc is focused to certain player
 	function NpcHandler:isFocused(focus)
-		for k,v in pairs(self.focuses) do
+		for k, v in pairs(self.focuses) do
 			if v == focus then
 				return true
 			end
@@ -196,7 +196,7 @@ if NpcHandler == nil then
 		end
 
 		local pos = nil
-		for k,v in pairs(self.focuses) do
+		for k, v in pairs(self.focuses) do
 			if v == focus then
 				pos = k
 			end
@@ -586,10 +586,17 @@ if NpcHandler == nil then
 		local ret = {}
 		for aux = 1, #msgs do
 			self.eventDelayedSay[pcid][aux] = {}
-			doCreatureSayWithDelay(getNpcCid(), msgs[aux], TALKTYPE_PRIVATE_NP, ((aux-1) * (interval or 4000)) + 700, self.eventDelayedSay[pcid][aux], pcid)
+			doCreatureSayWithDelay(
+				getNpcCid(),
+				msgs[aux],
+				TALKTYPE_PRIVATE_NP,
+				((aux - 1) * (interval or 4000)) + 700,
+				self.eventDelayedSay[pcid][aux],
+				pcid
+			)
 			ret[#ret + 1] = self.eventDelayedSay[pcid][aux]
 		end
-		return(ret)
+		return ret
 	end
 
 	-- Makes the npc represented by this instance of NpcHandler say something.

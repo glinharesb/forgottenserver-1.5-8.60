@@ -19,7 +19,10 @@ ec.onReportRuleViolation = function(self, targetName, reportType, reportReason, 
 
 	local file = io.open(string.format("data/reports/players/%s-%s-%d.txt", name, targetName, reportType), "a")
 	if not file then
-		self:sendTextMessage(MESSAGE_EVENT_ADVANCE, "There was an error when processing your report, please contact a gamemaster.")
+		self:sendTextMessage(
+			MESSAGE_EVENT_ADVANCE,
+			"There was an error when processing your report, please contact a gamemaster."
+		)
 		return
 	end
 
@@ -35,7 +38,14 @@ ec.onReportRuleViolation = function(self, targetName, reportType, reportReason, 
 	end
 	io.write("------------------------------\n")
 	io.close(file)
-	self:sendTextMessage(MESSAGE_EVENT_ADVANCE, string.format("Thank you for reporting %s. Your report will be processed by %s team as soon as possible.", targetName, configManager.getString(configKeys.SERVER_NAME)))
+	self:sendTextMessage(
+		MESSAGE_EVENT_ADVANCE,
+		string.format(
+			"Thank you for reporting %s. Your report will be processed by %s team as soon as possible.",
+			targetName,
+			configManager.getString(configKeys.SERVER_NAME)
+		)
+	)
 end
 
 ec:register()

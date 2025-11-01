@@ -32,7 +32,16 @@ end
 
 function Player:onMoveItem(item, count, fromPosition, toPosition, fromCylinder, toCylinder)
 	if hasEventCallback(EVENT_CALLBACK_ONMOVEITEM) then
-		return EventCallback(EVENT_CALLBACK_ONMOVEITEM, self, item, count, fromPosition, toPosition, fromCylinder, toCylinder)
+		return EventCallback(
+			EVENT_CALLBACK_ONMOVEITEM,
+			self,
+			item,
+			count,
+			fromPosition,
+			toPosition,
+			fromCylinder,
+			toCylinder
+		)
 	end
 	return true
 end
@@ -52,7 +61,15 @@ end
 
 function Player:onReportRuleViolation(targetName, reportType, reportReason, comment, translation)
 	if hasEventCallback(EVENT_CALLBACK_ONREPORTRULEVIOLATION) then
-		EventCallback(EVENT_CALLBACK_ONREPORTRULEVIOLATION, self, targetName, reportType, reportReason, comment, translation)
+		EventCallback(
+			EVENT_CALLBACK_ONREPORTRULEVIOLATION,
+			self,
+			targetName,
+			reportType,
+			reportReason,
+			comment,
+			translation
+		)
 	end
 end
 
@@ -152,25 +169,35 @@ function Player:onGainExperience(source, exp, rawExp)
 		end
 	end
 
-	local finalExp = hasEventCallback(EVENT_CALLBACK_ONGAINEXPERIENCE) and EventCallback(EVENT_CALLBACK_ONGAINEXPERIENCE, self, source, exp, rawExp) or exp
+	local finalExp = hasEventCallback(EVENT_CALLBACK_ONGAINEXPERIENCE)
+			and EventCallback(EVENT_CALLBACK_ONGAINEXPERIENCE, self, source, exp, rawExp)
+		or exp
 	return math.floor(finalExp)
 end
 
 function Player:onLoseExperience(exp)
-	return hasEventCallback(EVENT_CALLBACK_ONLOSEEXPERIENCE) and EventCallback(EVENT_CALLBACK_ONLOSEEXPERIENCE, self, exp) or exp
+	return hasEventCallback(EVENT_CALLBACK_ONLOSEEXPERIENCE)
+			and EventCallback(EVENT_CALLBACK_ONLOSEEXPERIENCE, self, exp)
+		or exp
 end
 
 function Player:onGainSkillTries(skill, tries)
 	if APPLY_SKILL_MULTIPLIER == false then
-		return hasEventCallback(EVENT_CALLBACK_ONGAINSKILLTRIES) and EventCallback(EVENT_CALLBACK_ONGAINSKILLTRIES, self, skill, tries) or tries
+		return hasEventCallback(EVENT_CALLBACK_ONGAINSKILLTRIES)
+				and EventCallback(EVENT_CALLBACK_ONGAINSKILLTRIES, self, skill, tries)
+			or tries
 	end
 
 	if skill == SKILL_MAGLEVEL then
 		tries = math.floor(tries * configManager.getNumber(configKeys.RATE_MAGIC))
-		local finalTries = hasEventCallback(EVENT_CALLBACK_ONGAINSKILLTRIES) and EventCallback(EVENT_CALLBACK_ONGAINSKILLTRIES, self, skill, tries) or tries
+		local finalTries = hasEventCallback(EVENT_CALLBACK_ONGAINSKILLTRIES)
+				and EventCallback(EVENT_CALLBACK_ONGAINSKILLTRIES, self, skill, tries)
+			or tries
 		return math.floor(finalTries)
 	end
 	tries = math.floor(tries * configManager.getNumber(configKeys.RATE_SKILL))
-	local finalTries = hasEventCallback(EVENT_CALLBACK_ONGAINSKILLTRIES) and EventCallback(EVENT_CALLBACK_ONGAINSKILLTRIES, self, skill, tries) or tries
+	local finalTries = hasEventCallback(EVENT_CALLBACK_ONGAINSKILLTRIES)
+			and EventCallback(EVENT_CALLBACK_ONGAINSKILLTRIES, self, skill, tries)
+		or tries
 	return math.floor(finalTries)
 end

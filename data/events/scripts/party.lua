@@ -45,5 +45,7 @@ function Party:onShareExperience(exp)
 	end
 
 	exp = math.ceil((exp * sharedExperienceMultiplier) / (#self:getMembers() + 1))
-	return hasEventCallback(EVENT_CALLBACK_ONSHAREEXPERIENCE) and EventCallback(EVENT_CALLBACK_ONSHAREEXPERIENCE, self, exp, rawExp) or exp
+	return hasEventCallback(EVENT_CALLBACK_ONSHAREEXPERIENCE)
+			and EventCallback(EVENT_CALLBACK_ONSHAREEXPERIENCE, self, exp, rawExp)
+		or exp
 end

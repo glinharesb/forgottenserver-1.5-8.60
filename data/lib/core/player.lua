@@ -44,7 +44,7 @@ function Player.getLossPercent(self)
 		[2] = 45,
 		[3] = 25,
 		[4] = 10,
-		[5] = 0
+		[5] = 0,
 	}
 
 	for i = 1, 5 do
@@ -92,7 +92,9 @@ function Player.removePremiumDays(self, days)
 end
 
 function Player.isPremium(self)
-	return self:getPremiumTime() > 0 or configManager.getBoolean(configKeys.FREE_PREMIUM) or self:hasFlag(PlayerFlag_IsAlwaysPremium)
+	return self:getPremiumTime() > 0
+		or configManager.getBoolean(configKeys.FREE_PREMIUM)
+		or self:hasFlag(PlayerFlag_IsAlwaysPremium)
 end
 
 function Player.sendCancelMessage(self, message)
@@ -231,11 +233,24 @@ function Player.removeTotalMoney(self, amount)
 			self:removeMoney(moneyCount)
 			local remains = amount - moneyCount
 			self:setBankBalance(bankCount - remains)
-			self:sendTextMessage(MESSAGE_INFO_DESCR, ("Paid %d from inventory and %d gold from bank account. Your account balance is now %d gold."):format(moneyCount, amount - moneyCount, self:getBankBalance()))
+			self:sendTextMessage(
+				MESSAGE_INFO_DESCR,
+				("Paid %d from inventory and %d gold from bank account. Your account balance is now %d gold."):format(
+					moneyCount,
+					amount - moneyCount,
+					self:getBankBalance()
+				)
+			)
 			return true
 		else
 			self:setBankBalance(bankCount - amount)
-			self:sendTextMessage(MESSAGE_INFO_DESCR, ("Paid %d gold from bank account. Your account balance is now %d gold."):format(amount, self:getBankBalance()))
+			self:sendTextMessage(
+				MESSAGE_INFO_DESCR,
+				("Paid %d gold from bank account. Your account balance is now %d gold."):format(
+					amount,
+					self:getBankBalance()
+				)
+			)
 			return true
 		end
 	end
@@ -246,9 +261,17 @@ function Player.addLevel(self, amount, round)
 	round = round or false
 	local level, amount = self:getLevel(), amount or 1
 	if amount > 0 then
-		return self:addExperience(Game.getExperienceForLevel(level + amount) - (round and self:getExperience() or Game.getExperienceForLevel(level)))
+		return self:addExperience(
+			Game.getExperienceForLevel(level + amount)
+				- (round and self:getExperience() or Game.getExperienceForLevel(level))
+		)
 	else
-		return self:removeExperience(((round and self:getExperience() or Game.getExperienceForLevel(level)) - Game.getExperienceForLevel(level + amount)))
+		return self:removeExperience(
+			(
+				(round and self:getExperience() or Game.getExperienceForLevel(level))
+				- Game.getExperienceForLevel(level + amount)
+			)
+		)
 	end
 end
 

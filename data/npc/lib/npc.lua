@@ -1,5 +1,5 @@
 -- Including the Advanced NPC System
-dofile('data/npc/lib/npcsystem/npcsystem.lua')
+dofile("data/npc/lib/npcsystem/npcsystem.lua")
 
 function msgcontains(message, keyword)
 	local message, keyword = message:lower(), keyword:lower()
@@ -7,7 +7,7 @@ function msgcontains(message, keyword)
 		return true
 	end
 
-	return message:find(keyword) and not message:find('(%w+)' .. keyword)
+	return message:find(keyword) and not message:find("(%w+)" .. keyword)
 end
 
 function doNpcSellItem(cid, itemid, amount, subType, ignoreCap, inBackpacks, backpack)
@@ -29,7 +29,7 @@ function doNpcSellItem(cid, itemid, amount, subType, ignoreCap, inBackpacks, bac
 		local container, b = Game.createItem(backpack, 1), 1
 		for i = 1, amount do
 			local item = container:addItem(itemid, subType)
-			if table.contains({(ItemType(backpack):getCapacity() * b), amount}, i) then
+			if table.contains({ (ItemType(backpack):getCapacity() * b), amount }, i) then
 				if Player(cid):addItemEx(container, ignoreCap) ~= RETURNVALUE_NOERROR then
 					b = b - 1
 					break
@@ -74,7 +74,7 @@ function doPlayerSellItem(cid, itemid, count, cost)
 	local player = Player(cid)
 	if player:removeItem(itemid, count) then
 		if not player:addMoney(cost) then
-			error('Could not add money to ' .. player:getName() .. '(' .. cost .. 'gp)')
+			error("Could not add money to " .. player:getName() .. "(" .. cost .. "gp)")
 		end
 		return true
 	end
@@ -104,7 +104,7 @@ function getCount(string)
 	local b, e = string:find("%d+")
 	local tonumber = tonumber(string:sub(b, e))
 	if tonumber > 2 ^ 32 - 1 then
-		print("Warning: Casting value to 32bit to prevent crash\n"..debug.traceback())
+		print("Warning: Casting value to 32bit to prevent crash\n" .. debug.traceback())
 	end
 	return b and e and math.min(2 ^ 32 - 1, tonumber) or -1
 end
@@ -121,7 +121,7 @@ function getMoneyCount(string)
 	local b, e = string:find("%d+")
 	local tonumber = tonumber(string:sub(b, e))
 	if tonumber > 2 ^ 32 - 1 then
-		print("Warning: Casting value to 32bit to prevent crash\n"..debug.traceback())
+		print("Warning: Casting value to 32bit to prevent crash\n" .. debug.traceback())
 	end
 	local money = b and e and math.min(2 ^ 32 - 1, tonumber) or -1
 	if isValidMoney(money) then
