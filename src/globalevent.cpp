@@ -166,7 +166,7 @@ void GlobalEvents::timer()
 			nextScheduledTime = nextExecutionTime;
 		}
 
-		globalEvent.setNextExecution(globalEvent.getNextExecution() + nextExecutionTime);
+		globalEvent.setNextExecution(now + nextExecutionTime);
 
 		++it;
 	}
@@ -202,7 +202,7 @@ void GlobalEvents::think()
 			nextScheduledTime = nextExecutionTime;
 		}
 
-		globalEvent.setNextExecution(globalEvent.getNextExecution() + nextExecutionTime);
+		globalEvent.setNextExecution(now + nextExecutionTime);
 	}
 
 	if (nextScheduledTime != std::numeric_limits<int64_t>::max()) {

@@ -1224,7 +1224,7 @@ const char* getReturnMessage(ReturnValue value)
 
 int64_t OTSYS_TIME()
 {
-	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
 }
 
 SpellGroup_t stringToSpellGroup(const std::string& value)
